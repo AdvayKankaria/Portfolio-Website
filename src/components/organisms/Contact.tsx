@@ -10,6 +10,8 @@ import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { SocialLink } from "@/components/molecules/SocialLink";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
+import { ScrollTextReveal } from "@/components/animations/ScrollTextReveal";
+import { ParallaxItem } from "@/components/animations/ParallaxItem";
 import { person, socialEntries } from "@/data/placeholder";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
@@ -69,10 +71,10 @@ export function Contact() {
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         {/* Left: copy + socials */}
         <div>
-          <p className="max-w-md text-pretty text-lg text-muted-foreground">
-            I&apos;m {person.availability.toLowerCase()}. The fastest way to reach
-            me is the form — or any of the channels below.
-          </p>
+          <ScrollTextReveal 
+            text={`I'm ${person.availability.toLowerCase()}. The fastest way to reach me is the form — or any of the channels below.`}
+            className="max-w-md text-pretty text-lg text-foreground leading-relaxed"
+          />
           <p className="mt-6 font-mono text-sm text-muted-foreground">
             Prefer email?{" "}
             <span className="text-foreground">{person.email}</span>
@@ -85,97 +87,99 @@ export function Contact() {
         </div>
 
         {/* Right: form / success */}
-        <AnimatePresence mode="wait">
-          {isSubmitSuccessful ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col items-start justify-center rounded-md border border-border bg-card p-8"
-            >
-              <motion.span
-                initial={reduced ? undefined : { scale: 0 }}
-                animate={reduced ? undefined : { scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="grid h-12 w-12 place-items-center rounded-full border border-red-500 text-red-400"
+        <ParallaxItem yRange={[40, -40]}>
+          <AnimatePresence mode="wait">
+            {isSubmitSuccessful ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-start justify-center rounded-md border border-border bg-card p-8"
               >
-                <Icon icon={Check} size={22} label="Sent" />
-              </motion.span>
-              <h3 className="mt-5 font-mono text-xl font-medium text-foreground">
-                Message sent
-              </h3>
-              <p className="mt-2 text-pretty text-sm text-muted-foreground">
-                Thanks for reaching out — I&apos;ll get back to you shortly.
-              </p>
-            </motion.div>
-          ) : (
-            <motion.form
-              key="form"
-              animate={controls}
-              onSubmit={handleSubmit(onValid, onInvalid)}
-              noValidate
-              className="space-y-5 rounded-md border border-border bg-card p-6 sm:p-8"
-            >
-              {FIELDS.map((field) => (
-                <div key={field.name}>
+                <motion.span
+                  initial={reduced ? undefined : { scale: 0 }}
+                  animate={reduced ? undefined : { scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="grid h-12 w-12 place-items-center rounded-full border border-red-500 text-red-400"
+                >
+                  <Icon icon={Check} size={22} label="Sent" />
+                </motion.span>
+                <h3 className="mt-5 font-mono text-xl font-medium text-foreground">
+                  Message sent
+                </h3>
+                <p className="mt-2 text-pretty text-sm text-muted-foreground">
+                  Thanks for reaching out — I&apos;ll get back to you shortly.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.form
+                key="form"
+                animate={controls}
+                onSubmit={handleSubmit(onValid, onInvalid)}
+                noValidate
+                className="space-y-5 rounded-md border border-border bg-card p-6 sm:p-8"
+              >
+                {FIELDS.map((field) => (
+                  <div key={field.name}>
+                    <label
+                      htmlFor={field.name}
+                      className="mb-2 block font-mono text-xs uppercase tracking-widest text-muted-foreground"
+                    >
+                      {field.label}
+                    </label>
+                    <input
+                      id={field.name}
+                      type={field.type}
+                      autoComplete={field.autoComplete}
+                      aria-invalid={Boolean(errors[field.name])}
+                      {...register(field.name)}
+                      className={cn(
+                        "w-full rounded-md border bg-input px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-graphite-600 focus-visible:border-ring",
+                        errors[field.name] ? "border-destructive" : "border-border",
+                      )}
+                    />
+                    {errors[field.name] && (
+                      <p
+                        role="alert"
+                        className="mt-2 font-mono text-xs text-destructive"
+                      >
+                        {errors[field.name]?.message}
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <div>
                   <label
-                    htmlFor={field.name}
+                    htmlFor="message"
                     className="mb-2 block font-mono text-xs uppercase tracking-widest text-muted-foreground"
                   >
-                    {field.label}
+                    Message
                   </label>
-                  <input
-                    id={field.name}
-                    type={field.type}
-                    autoComplete={field.autoComplete}
-                    aria-invalid={Boolean(errors[field.name])}
-                    {...register(field.name)}
+                  <textarea
+                    id="message"
+                    rows={5}
+                    aria-invalid={Boolean(errors.message)}
+                    {...register("message")}
                     className={cn(
-                      "w-full rounded-md border bg-input px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-graphite-600 focus-visible:border-ring",
-                      errors[field.name] ? "border-destructive" : "border-border",
+                      "w-full resize-none rounded-md border bg-input px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-graphite-600 focus-visible:border-ring",
+                      errors.message ? "border-destructive" : "border-border",
                     )}
                   />
-                  {errors[field.name] && (
-                    <p
-                      role="alert"
-                      className="mt-2 font-mono text-xs text-destructive"
-                    >
-                      {errors[field.name]?.message}
+                  {errors.message && (
+                    <p role="alert" className="mt-2 font-mono text-xs text-destructive">
+                      {errors.message.message}
                     </p>
                   )}
                 </div>
-              ))}
 
-              <div>
-                <label
-                  htmlFor="message"
-                  className="mb-2 block font-mono text-xs uppercase tracking-widest text-muted-foreground"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={5}
-                  aria-invalid={Boolean(errors.message)}
-                  {...register("message")}
-                  className={cn(
-                    "w-full resize-none rounded-md border bg-input px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-graphite-600 focus-visible:border-ring",
-                    errors.message ? "border-destructive" : "border-border",
-                  )}
-                />
-                {errors.message && (
-                  <p role="alert" className="mt-2 font-mono text-xs text-destructive">
-                    {errors.message.message}
-                  </p>
-                )}
-              </div>
-
-              <Button type="submit" variant="primary" className="w-full">
-                Send message
-              </Button>
-            </motion.form>
-          )}
-        </AnimatePresence>
+                <Button type="submit" variant="primary" className="w-full">
+                  Send message
+                </Button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </ParallaxItem>
       </div>
     </section>
   );

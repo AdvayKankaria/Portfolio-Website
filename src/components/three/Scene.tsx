@@ -12,17 +12,17 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 // sRGB approximations of the theme tokens (THREE.Color doesn't parse oklch).
 const RED = "#e5484d";
 const GRAPHITE = "#15181f";
-
 const GEOMETRIES: Array<{
   kind: GeometryKind;
   position: [number, number, number];
   scale: number;
   rotation: [number, number, number];
+  wireframe?: boolean;
 }> = [
-  { kind: "icosahedron", position: [-3, 1.4, -1], scale: 1.1, rotation: [0.12, 0.18, 0] },
-  { kind: "torusKnot", position: [3.2, -0.6, -2], scale: 0.9, rotation: [0.1, 0.14, 0.05] },
-  { kind: "octahedron", position: [1.6, 2, -1.5], scale: 0.7, rotation: [0.18, 0.1, 0.08] },
-  { kind: "icosahedron", position: [-2, -1.8, -2.5], scale: 0.6, rotation: [0.08, 0.22, 0] },
+  // Left (icosahedron)
+  { kind: "icosahedron", position: [-3.2, 1.4, -1], scale: 1.1, rotation: [0.08, 0.12, 0], wireframe: true },
+  // Right (circle/sphere)
+  { kind: "sphere", position: [3.2, 0.8, -2], scale: 0.9, rotation: [0.05, 0.1, 0.02], wireframe: true },
 ];
 
 /**
@@ -53,9 +53,10 @@ export function Scene() {
           reduced={reduced}
           color={GRAPHITE}
           emissive={RED}
+          wireframe={g.wireframe}
         />
       ))}
-      <ParticleField color={RED} reduced={reduced} count={900} />
+      <ParticleField color={RED} reduced={reduced} count={1500} />
     </Canvas>
   );
 }

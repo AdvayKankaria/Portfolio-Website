@@ -2,9 +2,10 @@
 
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Text } from "@react-three/drei";
 import type { Mesh } from "three";
 
-export type GeometryKind = "icosahedron" | "torusKnot" | "octahedron";
+export type GeometryKind = "icosahedron" | "torusKnot" | "octahedron" | "sphere" | "text";
 
 interface FloatingGeometryProps {
   kind: GeometryKind;
@@ -17,6 +18,8 @@ interface FloatingGeometryProps {
   reduced?: boolean;
   color: string;
   emissive: string;
+  wireframe?: boolean;
+  text?: string;
 }
 
 /**
@@ -33,6 +36,8 @@ export function FloatingGeometry({
   reduced = false,
   color,
   emissive,
+  wireframe = false,
+  text = "",
 }: FloatingGeometryProps) {
   const ref = useRef<Mesh>(null);
 
@@ -52,18 +57,36 @@ export function FloatingGeometry({
   });
 
   return (
-    <mesh ref={ref} position={position} scale={scale}>
-      {kind === "icosahedron" && <icosahedronGeometry args={[1, 0]} />}
-      {kind === "torusKnot" && <torusKnotGeometry args={[0.7, 0.25, 128, 16]} />}
-      {kind === "octahedron" && <octahedronGeometry args={[1, 0]} />}
-      <meshStandardMaterial
-        color={color}
-        emissive={emissive}
-        emissiveIntensity={0.35}
-        metalness={0.8}
-        roughness={0.2}
-        flatShading
-      />
-    </mesh>
+    <group ref={ref as any} position={position} scale={scale}>
+      {kind === "text" ? (
+        <Text
+          color={emissive}
+          fontSize={1}
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.01}
+          outlineColor={emissive}
+          fillOpacity={0.8}
+        >
+          {text}
+        </Text>
+      ) : (
+        <mesh>
+          {kind === "icosahedron" && <icosahedronGeometry args={[1, 0]} />}
+          {kind === "torusKnot" && <torusKnotGeometry args={[0.7, 0.25, 128, 16]} />}
+          {kind === "octahedron" && <octahedronGeometry args={[1, 0]} />}
+          {kind === "sphere" && <sphereGeometry args={[1, 16, 16]} />}
+          <meshStandardMaterial
+            color={color}
+            emissive={emissive}
+            emissiveIntensity={wireframe ? 0.8 : 0.35}
+            metalness={0.8}
+            roughness={0.2}
+            flatShading
+            wireframe={wireframe}
+          />
+        </mesh>
+      )}
+    </group>
   );
 }

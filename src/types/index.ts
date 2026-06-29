@@ -58,12 +58,7 @@ export interface Experience {
   url: string;
 }
 
-export type ProjectCategory =
-  | "All"
-  | "Web"
-  | "AI/ML"
-  | "Systems"
-  | "Open Source";
+export type ProjectCategory = string;
 
 export interface Project {
   title: string;

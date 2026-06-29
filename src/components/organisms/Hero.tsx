@@ -1,9 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -60,8 +60,22 @@ function ScrollIndicator() {
 }
 
 export function Hero() {
+  const reduced = useReducedMotion();
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Create smooth scroll-linked transformations mapped 0 to 1 of the section leaving the viewport
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]); // Fades out fully by 80% scroll
+  const scaleDown = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const blurFilter = useTransform(scrollYProgress, [0, 0.8], ["blur(0px)", "blur(12px)"]);
+
   return (
     <section
+      ref={containerRef}
       id="hero"
       aria-labelledby="hero-heading"
       className="relative flex min-h-screen items-center overflow-hidden"
@@ -86,7 +100,10 @@ export function Hero() {
       />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <div className="max-w-4xl">
+        <motion.div 
+          className="max-w-4xl"
+          style={reduced ? {} : { y: yParallax, opacity: opacityFade, scale: scaleDown, filter: blurFilter }}
+        >
           {person.available && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -126,7 +143,7 @@ export function Hero() {
               Contact
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       <ScrollIndicator />

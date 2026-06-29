@@ -23,7 +23,6 @@ export function NavLink({ item, active, onClick }: NavLinkProps) {
         active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
       )}
     >
-      <span className="mr-1.5 text-2xs text-muted-foreground">{item.num}</span>
       {item.label}
       {active && (
         <motion.span

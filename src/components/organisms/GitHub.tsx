@@ -12,11 +12,10 @@ import { github } from "@/data/placeholder";
 import { viewportOnce } from "@/lib/animations";
 
 const LANG_FILL = [
-  "var(--graphite-300)",
-  "var(--graphite-400)",
-  "var(--graphite-500)",
-  "var(--graphite-600)",
-  "var(--graphite-700)",
+  "#3572A5", // Python
+  "#f1e05a", // JavaScript
+  "#f34b7d", // C++
+  "#6e7681", // Other (GitHub Dark Grey)
 ];
 
 function LanguageBar() {

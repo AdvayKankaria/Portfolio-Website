@@ -1,9 +1,6 @@
 /* ============================================================================
    ⚠️  THE ONLY FILE WITH PERSONAL CONTENT.
    Every section imports from here — no personal data is hardcoded elsewhere.
-
-   This is realistic PLACEHOLDER data for a fictional engineer ("Alex Rivera").
-   Replace every value below with your own. Nothing else needs to change.
    ========================================================================== */
 
 import type {
@@ -20,333 +17,312 @@ import type {
 } from "@/types";
 
 export const person: Person = {
-  name: "Alex Rivera",
-  firstName: "Alex",
-  title: "Senior Software Engineer",
-  tagline: "I build precise, fast, and resilient systems for the web.",
-  bio: "Senior software engineer focused on performance-critical interfaces, distributed systems, and developer tooling.",
+  name: "Advay Kankaria",
+  firstName: "Advay",
+  title: "AI / ML Engineer & Full-Stack Developer",
+  tagline: "Building end-to-end systems where solid engineering meets agentic AI.",
+  bio: "AI Engineer passionate about building intelligent systems that solve real-world problems through automation, reasoning, and data-driven decision-making.",
   longBio: [
-    "I'm a senior software engineer with eight years spent shipping products where milliseconds and reliability matter — real-time dashboards, design tooling, and the platforms underneath them.",
-    "My work sits at the seam between systems engineering and interface craft: I care equally about a clean p99 latency graph and a button that feels right under the cursor.",
-    "Lately I've been going deep on WebGL, edge runtimes, and the kind of tooling that makes a whole team faster. I write to think, mentor when I can, and ship on Fridays anyway.",
+    "I'm an AI Engineer and Full-Stack Developer exploring the intersection of Artificial Intelligence, Software Engineering, and Cyber Security. I focus on building Agentic AI workflows, LLM reasoning architectures, and secure, production-ready systems.",
+    "My recent work spans orchestrating multi-agent platforms for telecom, building privacy-preserving Federated Learning networks for hospitals, and deploying real-time Computer Vision models.",
+    "With a background in Cyber Security and as a Certified Ethical Hacker (CEH), I bring a security-first mindset to AI. I believe the best intelligent systems are not only capable, but deeply secure, reliable, and beautifully engineered."
   ],
-  location: "San Francisco, CA",
-  email: "alex@example.com",
-  availability: "Open to senior & staff engineering roles",
+  location: "Chennai, Tamil Nadu, India",
+  email: "advaykankaria@gmail.com", 
+  availability: "Open to AI Engineering, Applied ML, and Software Engineering roles",
   available: true,
   resumeUrl: "/resume.pdf",
-  initials: "AR",
-  avatar: "/avatar.svg",
+  initials: "AK",
+  avatar: "/profile.jpg",
 };
 
 export const social: Social = {
-  github: "https://github.com/alexrivera",
-  linkedin: "https://linkedin.com/in/alexrivera",
-  twitter: "https://twitter.com/alexrivera",
-  website: "https://alexrivera.dev",
+  github: "https://github.com/AdvayKankaria",
+  linkedin: "https://www.linkedin.com/in/advaykankaria",
+  twitter: "",
+  website: "", 
 };
 
 export const socialEntries: SocialEntry[] = [
   {
     platform: "github",
     label: "GitHub",
-    handle: "@alexrivera",
+    handle: "@AdvayKankaria",
     href: social.github,
   },
   {
     platform: "linkedin",
     label: "LinkedIn",
-    handle: "in/alexrivera",
+    handle: "in/advaykankaria",
     href: social.linkedin,
-  },
-  {
-    platform: "twitter",
-    label: "Twitter / X",
-    handle: "@alexrivera",
-    href: social.twitter,
-  },
-  {
-    platform: "website",
-    label: "Website",
-    handle: "alexrivera.dev",
-    href: social.website,
   },
 ];
 
 export const stats: Stat[] = [
-  { value: 8, suffix: "+", label: "Years building" },
-  { value: 40, suffix: "+", label: "Projects shipped" },
-  { value: 12, suffix: "", label: "Open-source repos" },
-  { value: 99, suffix: "%", label: "Uptime maintained" },
+  { value: 9.65, suffix: "/10", label: "CGPA (SRM IST)" },
+  { value: 5, suffix: "+", label: "Major AI Projects" },
+  { value: 8, suffix: "", label: "AI Agents Orchestrated" },
+  { value: 2, suffix: "", label: "Industry Internships" },
 ];
 
 export const skills: SkillCategory[] = [
   {
+    category: "AI / ML / Data",
+    items: [
+      { name: "LangGraph & LangChain", level: 5 },
+      { name: "LlamaIndex & CrewAI", level: 5 },
+      { name: "PyTorch & TensorFlow", level: 4 },
+      { name: "Pandas & PySpark", level: 4 },
+      { name: "YOLOv5 & Scikit-learn", level: 4 },
+    ],
+  },
+  {
     category: "Languages",
     items: [
-      { name: "TypeScript", level: 5 },
       { name: "Python", level: 5 },
-      { name: "Go", level: 4 },
-      { name: "Rust", level: 3 },
+      { name: "TypeScript / JS", level: 4 },
       { name: "SQL", level: 4 },
+      { name: "C++", level: 3 },
+      { name: "Bash", level: 3 },
     ],
   },
   {
-    category: "Frontend",
+    category: "Backend & Databases",
     items: [
-      { name: "React", level: 5 },
-      { name: "Next.js", level: 5 },
-      { name: "Tailwind CSS", level: 5 },
-      { name: "Three.js / WebGL", level: 4 },
-      { name: "Framer Motion", level: 4 },
-    ],
-  },
-  {
-    category: "Backend",
-    items: [
-      { name: "Node.js", level: 5 },
-      { name: "PostgreSQL", level: 4 },
-      { name: "GraphQL", level: 4 },
-      { name: "Redis", level: 4 },
-      { name: "gRPC", level: 3 },
+      { name: "FastAPI", level: 5 },
+      { name: "Node.js", level: 4 },
+      { name: "Qdrant (Vector DB)", level: 4 },
+      { name: "MongoDB & PostgreSQL", level: 4 },
+      { name: "Redis & GraphQL", level: 3 },
     ],
   },
   {
     category: "Cloud & DevOps",
     items: [
-      { name: "AWS", level: 4 },
-      { name: "Docker", level: 5 },
-      { name: "Kubernetes", level: 4 },
+      { name: "AWS (EC2, S3, Lambda)", level: 4 },
+      { name: "Docker & Kubernetes", level: 4 },
       { name: "Terraform", level: 3 },
-      { name: "CI/CD", level: 4 },
+      { name: "CI/CD & GitHub Actions", level: 4 },
     ],
   },
   {
-    category: "Tooling",
+    category: "Security & Tools",
     items: [
-      { name: "Git", level: 5 },
-      { name: "Vite", level: 4 },
-      { name: "Playwright", level: 4 },
-      { name: "Figma", level: 3 },
+      { name: "Ethical Hacking (CEH)", level: 4 },
+      { name: "Kali Linux & Metasploit", level: 4 },
+      { name: "Wireshark & Nmap", level: 4 },
+      { name: "Burp Suite & Forensics", level: 4 },
+      { name: "Git & Figma", level: 5 },
+    ],
+  },
+  {
+    category: "Frontend & UI",
+    items: [
+      { name: "React & Next.js", level: 4 },
+      { name: "Tailwind CSS", level: 5 },
+      { name: "Framer Motion", level: 3 },
+      { name: "Shadcn UI", level: 4 },
+    ],
+  },
+  {
+    category: "Architecture & Systems",
+    items: [
+      { name: "Microservices", level: 4 },
+      { name: "System Design", level: 4 },
+      { name: "RESTful APIs", level: 5 },
+      { name: "Object-Oriented Design", level: 4 },
+    ],
+  },
+  {
+    category: "Core & Soft Skills",
+    items: [
+      { name: "Technical Communication", level: 5 },
+      { name: "Team Leadership", level: 4 },
+      { name: "Problem Solving", level: 5 },
+      { name: "Agile & Scrum", level: 4 },
     ],
   },
 ];
 
 export const experience: Experience[] = [
   {
-    company: "Halcyon Systems",
-    role: "Senior Software Engineer",
-    start: "2022",
+    company: "Prodapt",
+    role: "Software Development Intern",
+    start: "Feb 2026",
     end: "Present",
     current: true,
-    location: "San Francisco, CA",
+    location: "Chennai, Tamil Nadu, India (On-site)",
     description: [
-      "Lead engineer on a real-time observability platform serving 4M+ events/sec with sub-second query latency.",
-      "Cut dashboard render times 62% by moving hot paths to WebGL and a streaming data layer.",
-      "Mentor a team of five; own the frontend performance budget and architecture review.",
+      "Focused on Artificial Intelligence and Agentic AI workflows to optimize intelligent automation.",
+      "Building and evaluating AI-driven systems and architectures for enterprise scale.",
     ],
-    stack: ["TypeScript", "React", "Go", "ClickHouse", "Kubernetes"],
-    url: "https://example.com",
+    stack: ["Artificial Intelligence", "Agentic AI", "Python"],
+    url: "https://www.prodapt.com",
   },
   {
-    company: "Northwind Labs",
-    role: "Software Engineer",
-    start: "2019",
-    end: "2022",
+    company: "Ziffity Solutions",
+    role: "Software Engineering Intern",
+    start: "2025",
+    end: "2025",
     current: false,
-    location: "Remote",
+    location: "Chennai, India",
     description: [
-      "Built the collaborative canvas engine behind a design tool used by 200k+ creators.",
-      "Designed an offline-first sync protocol with CRDTs, reducing conflict errors to near zero.",
-      "Shipped the public component library and design system adopted across four product teams.",
+      "Contributed to software engineering projects, adapting to new technologies and transforming ideas into production-ready solutions.",
+      "Collaborated with development teams to solve complex engineering challenges."
     ],
-    stack: ["TypeScript", "React", "Node.js", "PostgreSQL", "WebSockets"],
-    url: "https://example.com",
-  },
-  {
-    company: "Cobalt Interactive",
-    role: "Frontend Engineer",
-    start: "2017",
-    end: "2019",
-    current: false,
-    location: "Austin, TX",
-    description: [
-      "Delivered marketing and product experiences for early-stage startups under tight timelines.",
-      "Introduced a performance culture: Lighthouse gates in CI, image pipelines, and budgets.",
-    ],
-    stack: ["JavaScript", "React", "Next.js", "GSAP"],
-    url: "https://example.com",
+    stack: ["Software Engineering", "Web Technologies"],
+    url: "https://www.ziffity.com",
   },
 ];
 
 export const projects: Project[] = [
   {
-    title: "Atlas Observability",
+    title: "MediAssist AI",
     description:
-      "A real-time metrics and tracing platform with a WebGL-accelerated timeline that stays at 60fps across millions of spans. Streaming query layer, custom storage engine, and a keyboard-first UI.",
-    stack: ["Next.js", "WebGL", "Go", "ClickHouse"],
-    github: "https://github.com/alexrivera/atlas",
-    live: "https://example.com",
+      "A privacy-preserving, 8-agent clinical decision-support platform featuring hybrid RAG, natural language to MongoDB analytics, LLM-as-Judge validation, and Role-Based Access Control (RBAC).",
+    stack: ["LangGraph", "Qdrant", "MongoDB", "FastAPI", "React"],
+    github: "", 
+    live: "",
     featured: true,
-    category: "Systems",
-    year: "2024",
-    image: "/projects/atlas.svg",
+    category: "Agentic AI",
+    year: "2026",
+    image: "/projects/mediassist.png",
   },
   {
-    title: "Prism Editor",
+    title: "Telecom AI-Ops",
     description:
-      "A collaborative vector editor with CRDT-based offline sync and a plugin runtime sandboxed in WebAssembly.",
-    stack: ["React", "Rust", "WASM", "WebSockets"],
-    github: "https://github.com/alexrivera/prism",
-    live: "https://example.com",
-    featured: false,
-    category: "Web",
-    year: "2023",
-    image: "/projects/prism.svg",
+      "A LangGraph-orchestrated multi-agent system designed for telecom support, hardware diagnostics, and billing automation.",
+    stack: ["LangGraph", "LlamaIndex", "CrewAI", "Google ADK"],
+    github: "https://github.com/AdvayKankaria/telecom-ai-ops",
+    live: "",
+    featured: true,
+    category: "Agentic AI",
+    year: "2025",
+    image: "/projects/telecom.png",
   },
   {
-    title: "Quanta",
+    title: "Federated Learning for Hospitals",
     description:
-      "An on-device inference toolkit that compiles small transformer models to run in the browser via WebGPU.",
-    stack: ["TypeScript", "WebGPU", "Python"],
-    github: "https://github.com/alexrivera/quanta",
-    live: "https://example.com",
-    featured: false,
-    category: "AI/ML",
-    year: "2024",
-    image: "/projects/quanta.svg",
-  },
-  {
-    title: "Relay",
-    description:
-      "A typed RPC framework for edge runtimes with end-to-end inference and zero-config streaming.",
-    stack: ["TypeScript", "Deno", "gRPC"],
-    github: "https://github.com/alexrivera/relay",
+      "Implemented a privacy-preserving federated learning system with differential privacy across multiple hospital nodes to train medical models without sharing patient data.",
+    stack: ["Python", "Federated Learning", "Differential Privacy"],
+    github: "https://github.com/AdvayKankaria/federated-learning-hospitals",
     live: "",
     featured: false,
-    category: "Open Source",
-    year: "2023",
-    image: "/projects/relay.svg",
+    category: "Security & AI",
+    year: "2025",
+    image: "/projects/federated.png",
   },
   {
-    title: "Forge UI",
+    title: "Tomalytics",
     description:
-      "A headless component library and design-token pipeline that powers four production design systems.",
-    stack: ["React", "Tailwind", "Style Dictionary"],
-    github: "https://github.com/alexrivera/forge",
-    live: "https://example.com",
+      "A Computer Vision application using YOLO object detection for real-time tomato quality grading and dynamic pricing assessment.",
+    stack: ["YOLOv5", "CNNs", "Python"],
+    github: "https://github.com/AdvayKankaria/Tomalytics",
+    live: "",
     featured: false,
-    category: "Open Source",
-    year: "2022",
-    image: "/projects/forge.svg",
+    category: "Computer Vision",
+    year: "2024",
+    image: "/projects/tomalytics.png",
+  },
+  {
+    title: "Career Prediction System",
+    description:
+      "An ML-powered system that analyzes academic performance and skill sets to predict and recommend optimal career paths.",
+    stack: ["Scikit-learn", "Pandas", "Python"],
+    github: "https://github.com/AdvayKankaria/career-prediction",
+    live: "",
+    featured: false,
+    category: "Machine Learning",
+    year: "2024",
+    image: "/projects/career.png",
   },
 ];
 
 export const research: Research[] = [
   {
-    title:
-      "Streaming Aggregation for Interactive Observability at the Edge",
-    venue: "USENIX NSDI (Workshop)",
-    year: "2024",
+    title: "Privacy-Preserving Federated Learning for Pneumonia Detection",
+    venue: "IEEE International Conference on Artificial Intelligence",
+    year: "2025",
     abstract:
-      "We present a streaming aggregation layer that maintains interactive query latency over high-cardinality telemetry. By pushing partial aggregates to edge nodes and reconciling with a columnar backend, we keep p99 query latency under 200ms while ingesting millions of events per second. We discuss the trade-offs between freshness, accuracy, and cost, and evaluate the system on production-scale workloads.",
-    pdf: "/research/streaming-aggregation.pdf",
-    doi: "https://doi.org/10.0000/placeholder",
-    citations: 14,
-  },
-  {
-    title: "CRDT Compaction Strategies for Long-Lived Collaborative Documents",
-    venue: "PaPoC (EuroSys Workshop)",
-    year: "2022",
-    abstract:
-      "Long-lived collaborative documents accumulate operation history that degrades memory and load performance. We propose a compaction strategy for sequence CRDTs that preserves causal consistency while bounding metadata growth, and show a 4x reduction in document load time on real editing traces.",
-    pdf: "/research/crdt-compaction.pdf",
-    doi: "https://doi.org/10.0000/placeholder",
-    citations: 9,
+      `Published in IEEE. Implemented a complete Federated Learning system for pneumonia detection from chest X-rays, designed for multi-hospital collaboration while maintaining strict patient privacy.
+
+Key Contributions & Methodology:
+• Differential Privacy: Engineered (ε,δ)-Differential Privacy guarantees using Opacus to prevent patient data leakage during model training.
+• Adaptive Aggregation: Developed a custom FedAvg algorithm that weighs node contributions based on local data quality and sample size.
+• Explainable AI (XAI): Integrated Grad-CAM to visualize model attention, ensuring clinical interpretability for radiologists.
+• Transfer Learning: Leveraged EfficientNet-B0 as the base architecture, achieving 94% accuracy across distributed non-IID hospital nodes.
+
+The entire codebase is open-source, featuring a real-time web UI for simulating node connections and monitoring global model convergence.`,
+    pdf: "https://github.com/AdvayKankaria/federated-learning-hospitals",
+    doi: "https://github.com/AdvayKankaria/federated-learning-hospitals",
+    citations: 0,
   },
 ];
 
 export const achievements: Achievement[] = [
   {
-    title: "Hackathon Winner — Best Systems Hack",
-    org: "TechCrunch Disrupt",
-    year: "2023",
-    description:
-      "First place out of 180 teams for a real-time anomaly detection pipeline built in 36 hours.",
-    metric: { value: 1, label: "Place", suffix: "st" },
+    title: "Certified Ethical Hacker (CEH)",
+    org: "EC-Council",
+    year: "2025",
+    description: "Achieved certification demonstrating strong foundational knowledge in network security and ethical hacking.",
   },
   {
-    title: "Open Source Spotlight",
-    org: "GitHub Stars Program",
-    year: "2023",
-    description:
-      "Recognized for maintainership across developer tooling projects with a combined 6k+ stars.",
-    metric: { value: 6, label: "Stars", suffix: "k+" },
-  },
-  {
-    title: "Speaker — WebGL Performance",
-    org: "React Summit",
+    title: "Performance-Based Scholarship",
+    org: "SRM Institute of Science and Technology",
     year: "2024",
-    description:
-      "Invited talk on keeping data-dense WebGL interfaces at 60fps under real workloads.",
+    description: "Awarded for outstanding academic performance (CGPA: 9.65/10).",
   },
   {
-    title: "Patent — Streaming Query Reconciliation",
-    org: "USPTO (Pending)",
+    title: "Finalist — Quantathon 1.0",
+    org: "SRM Quantum Computing Club",
     year: "2024",
-    description:
-      "Co-inventor on a method for reconciling edge partial-aggregates with a columnar store.",
+    description: "Competed and placed as a finalist in a highly competitive quantum computing and algorithmic challenge.",
   },
+  {
+    title: "AWS Machine Learning Foundations",
+    org: "Amazon Web Services",
+    year: "2024",
+    description: "Certified in core cloud and machine learning infrastructure principles on AWS.",
+  },
+  {
+    title: "NPTEL Cloud Computing",
+    org: "NPTEL",
+    year: "2023",
+    description: "Completed comprehensive certification on cloud computing architectures and distributed systems.",
+  }
 ];
 
 export const github: GitHubData = {
-  username: "alexrivera",
-  profileUrl: "https://github.com/alexrivera",
+  username: "AdvayKankaria",
+  profileUrl: "https://github.com/AdvayKankaria",
   stats: {
-    stars: 6240,
-    repos: 48,
-    followers: 1830,
-    contributions: 1947,
+    stars: 20, 
+    repos: 19, 
+    followers: 1, 
+    contributions: 350, 
   },
   topRepos: [
     {
-      name: "atlas",
-      description: "WebGL-accelerated real-time observability platform.",
-      language: "Go",
-      languageColor: "oklch(0.65 0.01 260)",
-      stars: 3120,
-      url: "https://github.com/alexrivera/atlas",
+      name: "telecom-ai-ops",
+      description: "LangGraph-orchestrated multi-agent system for telecom support, diagnostics & billing.",
+      language: "Python",
+      languageColor: "oklch(0.65 0.15 220)",
+      stars: 12,
+      url: "https://github.com/AdvayKankaria/telecom-ai-ops",
     },
     {
-      name: "forge",
-      description: "Headless components + design-token pipeline.",
-      language: "TypeScript",
-      languageColor: "oklch(0.72 0.01 260)",
-      stars: 1840,
-      url: "https://github.com/alexrivera/forge",
-    },
-    {
-      name: "relay",
-      description: "Typed RPC for edge runtimes with streaming.",
-      language: "TypeScript",
-      languageColor: "oklch(0.72 0.01 260)",
-      stars: 940,
-      url: "https://github.com/alexrivera/relay",
-    },
-    {
-      name: "quanta",
-      description: "On-device transformer inference via WebGPU.",
-      language: "Rust",
-      languageColor: "oklch(0.58 0.01 260)",
-      stars: 720,
-      url: "https://github.com/alexrivera/quanta",
-    },
+      name: "federated-learning-hospitals",
+      description: "Privacy-preserving federated learning with differential privacy across hospital nodes.",
+      language: "Jupyter Notebook",
+      languageColor: "oklch(0.58 0.20 30)",
+      stars: 8,
+      url: "https://github.com/AdvayKankaria/federated-learning-hospitals",
+    }
   ],
   languages: [
-    { name: "TypeScript", percent: 46 },
-    { name: "Go", percent: 22 },
-    { name: "Rust", percent: 16 },
-    { name: "Python", percent: 11 },
+    { name: "Python", percent: 65 },
+    { name: "JavaScript", percent: 20 },
+    { name: "C++", percent: 10 },
     { name: "Other", percent: 5 },
   ],
 };

@@ -50,18 +50,20 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
         className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
       {/* CTA overlay slides up on hover */}
-      <div className="absolute inset-x-0 bottom-0 flex translate-y-full items-center gap-2 bg-background/80 p-3 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0">
-        {project.github && (
-          <IconLink href={project.github} label="View source on GitHub">
-            <GithubIcon size={16} />
-          </IconLink>
-        )}
-        {project.live && (
-          <IconLink href={project.live} label="Open live site">
-            <Icon icon={ArrowUpRight} size={16} label="Open live site" />
-          </IconLink>
-        )}
-      </div>
+      {(project.github || project.live) && (
+        <div className="absolute inset-x-0 bottom-0 flex translate-y-full items-center gap-2 bg-background/80 p-3 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0">
+          {project.github && (
+            <IconLink href={project.github} label="View source on GitHub">
+              <GithubIcon size={16} />
+            </IconLink>
+          )}
+          {project.live && (
+            <IconLink href={project.live} label="Open live site">
+              <Icon icon={ArrowUpRight} size={16} label="Open live site" />
+            </IconLink>
+          )}
+        </div>
+      )}
     </div>
   );
 

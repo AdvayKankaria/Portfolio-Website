@@ -126,7 +126,6 @@ export function Navbar() {
                           : "text-muted-foreground",
                       )}
                     >
-                      {item.num}
                     </span>
                     {item.label}
                   </a>

@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { TimelineEntry } from "@/components/molecules/TimelineEntry";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
+import { ParallaxItem } from "@/components/animations/ParallaxItem";
 import { experience } from "@/data/placeholder";
 import { cn } from "@/lib/utils";
 
@@ -64,9 +65,11 @@ export function Experience() {
                     leftSide ? "md:col-start-1 md:pr-12" : "md:col-start-2 md:pl-12",
                   )}
                 >
-                  <ScrollReveal>
-                    <TimelineEntry entry={entry} align={leftSide ? "left" : "right"} />
-                  </ScrollReveal>
+                  <ParallaxItem yRange={[20, -20]}>
+                    <ScrollReveal>
+                      <TimelineEntry entry={entry} align={leftSide ? "left" : "right"} />
+                    </ScrollReveal>
+                  </ParallaxItem>
                 </div>
               </li>
             );

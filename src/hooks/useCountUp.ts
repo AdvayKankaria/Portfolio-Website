@@ -30,7 +30,8 @@ export function useCountUp(target: number, { duration = 1600, start }: Options) 
       const elapsed = now - startTime;
       const t = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
-      setValue(Math.round(target * eased));
+      const decimals = target.toString().split(".")[1]?.length || 0;
+      setValue(Number((target * eased).toFixed(decimals)));
       if (t < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);

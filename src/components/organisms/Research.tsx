@@ -1,5 +1,6 @@
 import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { ResearchItem } from "@/components/molecules/ResearchItem";
+import { ParallaxItem } from "@/components/animations/ParallaxItem";
 import { research } from "@/data/placeholder";
 
 export function Research() {
@@ -20,9 +21,11 @@ export function Research() {
       />
 
       {hasResearch ? (
-        <ul className="border-t border-border">
+        <ul className="mt-8">
           {research.map((entry, i) => (
-            <ResearchItem key={`${entry.title}-${i}`} entry={entry} />
+            <ParallaxItem key={`${entry.title}-${i}`} yRange={[15, -15]}>
+              <ResearchItem entry={entry} />
+            </ParallaxItem>
           ))}
         </ul>
       ) : (

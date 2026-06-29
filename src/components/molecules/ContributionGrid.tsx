@@ -7,11 +7,11 @@ const GAP = 3;
 
 // Graphite intensity scale (no decorative red — red stays for interaction only).
 const LEVEL_FILL = [
-  "var(--graphite-900)",
-  "var(--graphite-700)",
-  "var(--graphite-600)",
-  "var(--graphite-500)",
-  "var(--graphite-300)",
+  "#161b22", // Level 0 (Empty)
+  "#0e4429", // Level 1
+  "#006d32", // Level 2
+  "#26a641", // Level 3
+  "#39d353", // Level 4
 ];
 
 function seedFrom(username: string): number {
