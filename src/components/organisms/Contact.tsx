@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Check } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -37,13 +38,32 @@ export function Contact() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
-  const onValid = (data: FormValues) => {
-    // Placeholder submission. Wire a real handler here, e.g.:
-    //   await fetch("/api/contact", { method: "POST", body: JSON.stringify(data) });
-    console.info("[contact] submission", data);
+  const [submitError, setSubmitError] = useState(false);
+
+  const onValid = async (data: FormValues) => {
+    setSubmitError(false);
+    const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+
+    if (!formspreeId) {
+      console.warn("No NEXT_PUBLIC_FORMSPREE_ID provided. Simulating submission.");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://formspree.io/f/${formspreeId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Submission failed");
+    } catch (err) {
+      setSubmitError(true);
+      throw err; // Throws so react-hook-form does not set isSubmitSuccessful = true
+    }
   };
 
   const onInvalid = () => {
@@ -173,8 +193,13 @@ export function Contact() {
                   )}
                 </div>
 
-                <Button type="submit" variant="primary" className="w-full">
-                  Send message
+                {submitError && (
+                  <p role="alert" className="text-center font-mono text-xs text-destructive">
+                    Oops! Something went wrong. Please try again.
+                  </p>
+                )}
+                <Button type="submit" variant="primary" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? "Sending..." : "Send message"}
                 </Button>
               </motion.form>
             )}
