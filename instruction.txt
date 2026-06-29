@@ -1,0 +1,881 @@
+You are my Senior Creative Director, Principal Frontend Engineer, Senior UX Designer, Motion Designer, Three.js Engineer, Performance Engineer, and Code Reviewer.
+
+We are building a premium Awwwards-quality portfolio website.
+
+Work autonomously. Make strong decisions. Explain significant choices briefly. Do not wait for approval between phases unless you hit a genuine blocker.
+
+════════════════════════════════════════════
+GROUND RULES (read once, apply everywhere)
+════════════════════════════════════════════
+
+- All personal content lives exclusively in src/data/placeholder.ts. Never hardcode names, titles, dates, or descriptions anywhere else.
+- All design decisions must trace back to the generated MASTER.md design system (created in Step 0).
+- Never use arbitrary Tailwind values except for WebGL canvas pixel dimensions.
+- Every interactive element must have both a hover state and a focus-visible state — no exceptions.
+- Every animation must serve one of: reveal, hierarchy, or feedback. Remove any that don't.
+- Commit after each completed phase with a descriptive message. Never commit node_modules.
+
+════════════════════════════════════════════
+STEP 0 — ENVIRONMENT SETUP
+════════════════════════════════════════════
+
+Execute these commands in order. Verify each one succeeds before continuing.
+
+1. Check Python 3 is available:
+   python3 --version
+   If missing, run: brew install python3 (macOS) or sudo apt install python3 (Linux)
+
+2. Install the UI/UX Pro Max skill:
+   npm install -g ui-ux-pro-max-cli
+   uipro init --ai claude
+
+3. Generate and persist the design system:
+   python3 .claude/skills/ui-ux-pro-max/scripts/search.py \
+     "senior software engineer developer portfolio dark minimal interactive" \
+     --design-system -p "Portfolio" --persist
+
+4. Confirm design-system/MASTER.md was created. Read it fully.
+   This file is the single source of truth for every color, font, spacing, shadow, and animation token in this project. Nothing overrides it.
+
+If Step 3 fails, use this fallback palette and continue:
+   Primary: #0F0F0F | Accent: #6366F1 | Surface: #1A1A1A
+   Text primary: #F5F5F5 | Text muted: #6B7280
+   Font: Inter (headings) + Inter (body)
+   Style direction: dark minimal, Swiss grid influence
+
+════════════════════════════════════════════
+PHASE 1 — ARCHITECTURE DOCUMENT
+════════════════════════════════════════════
+
+Before writing any code, produce the architecture document and write it to docs/ARCHITECTURE.md.
+
+It must cover every item below. Be specific — no placeholder sentences.
+
+Folder architecture
+  Full src/ tree down to file level for every directory.
+
+Component architecture
+  Atoms → Molecules → Organisms → Sections. Name every planned component.
+
+Animation architecture
+  List every animation type, which library handles it, and the trigger mechanism.
+  Framer Motion handles: page transitions, scroll reveals, text reveals, stagger, hover, micro-interactions.
+  React Three Fiber handles: 3D scene.
+  GSAP only if Framer Motion cannot achieve the effect — justify it.
+
+Design tokens (from MASTER.md)
+  Map every token from MASTER.md to a CSS custom property name and its Tailwind config key.
+
+Typography system
+  Scale: display / h1 / h2 / h3 / h4 / body-lg / body / body-sm / caption.
+  For each: font-size, line-height, font-weight, letter-spacing.
+
+Spacing system
+  4px base grid. Named scale: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 / 128px.
+  Map to Tailwind config keys.
+
+Animation tokens
+  duration-instant: 100ms | duration-fast: 200ms | duration-base: 350ms
+  duration-slow: 600ms | duration-page: 900ms
+  ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1)
+  ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1)
+  spring: { type: "spring", stiffness: 300, damping: 30 }
+
+Responsive strategy
+  Desktop-first. Breakpoints: 1440 / 1024 / 768 / 375.
+  For each section, note how the layout changes — not just "stack on mobile."
+
+Accessibility plan
+  List every ARIA pattern, focus strategy, and reduced-motion fallback.
+
+SEO plan
+  Every metadata field, structured data type, and file needed.
+
+Performance plan
+  Dynamic import strategy. Which components are SSR vs client-only. Image optimization approach. Bundle size budget per route (<150kb JS first load).
+
+Save to docs/ARCHITECTURE.md. Then continue to Phase 2 without waiting.
+
+════════════════════════════════════════════
+PHASE 2 — PROJECT SETUP
+════════════════════════════════════════════
+
+Scaffold:
+  npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+
+Install dependencies:
+  npm install framer-motion @react-three/fiber @react-three/drei three @types/three
+  npm install gsap lucide-react react-hook-form zod @hookform/resolvers
+  npm install next-sitemap
+  npx shadcn@latest init
+  npx shadcn@latest add button card badge separator tooltip
+
+Configure tailwind.config.ts
+  Extend theme with every token from MASTER.md: colors, fontFamily, fontSize, spacing, borderRadius, boxShadow, transitionDuration, transitionTimingFunction.
+  No arbitrary values in any component. If a value isn't in the config, add it to the config first.
+
+Configure globals.css
+  Declare every token as a CSS custom property on :root.
+  Include a [data-reduce-motion] selector that sets all durations to 0ms.
+
+Configure next.config.ts
+  Enable bundle analyzer (ANALYZE=true).
+  Set images.formats to ['image/avif', 'image/webp'].
+
+Create the full folder structure:
+  src/
+    app/
+      layout.tsx          ← metadata, fonts, providers
+      page.tsx            ← home page, imports all sections
+      not-found.tsx
+      loading.tsx
+      robots.ts
+      sitemap.ts
+    components/
+      ui/                 ← shadcn primitives only
+      atoms/              ← Button, Badge, Icon, Tag, Chip, Tooltip, Avatar
+      molecules/          ← NavLink, ProjectCard, SkillBadge, SectionHeader, TimelineEntry, StatCounter
+      organisms/          ← Navbar, Hero, About, Skills, Experience, Projects, Research, Achievements, GitHub, Contact, Footer
+      three/              ← Scene.tsx, FloatingGeometry.tsx, ParticleField.tsx (all dynamic imported)
+      animations/         ← PageTransition.tsx, ScrollReveal.tsx, TextReveal.tsx, StaggerContainer.tsx
+      providers/          ← MotionProvider.tsx (handles prefers-reduced-motion), ThemeProvider.tsx
+    hooks/
+      useScrollProgress.ts
+      useReducedMotion.ts
+      useInView.ts
+      useMagneticHover.ts
+      useCountUp.ts
+    lib/
+      utils.ts
+      fonts.ts
+      metadata.ts
+      animations.ts       ← shared Framer Motion variants
+      constants.ts
+    types/
+      index.ts            ← all shared TypeScript interfaces
+    data/
+      placeholder.ts      ← ONLY FILE with personal content. All sections import from here.
+    styles/
+      tokens.css
+
+Create src/data/placeholder.ts immediately with this structure:
+  export const person = { name, title, bio, location, email, availability }
+  export const social = { github, linkedin, twitter, website }
+  export const skills = [{ category, items: [{ name, level }] }]
+  export const experience = [{ company, role, start, end, description, stack }]
+  export const projects = [{ title, description, stack, github, live, featured, category }]
+  export const research = [{ title, venue, year, abstract, pdf, citations }]
+  export const achievements = [{ title, org, year, description }]
+  export const github = { username, stats: { stars, repos, followers, contributions } }
+
+════════════════════════════════════════════
+PHASE 3 — DESIGN SYSTEM IMPLEMENTATION
+════════════════════════════════════════════
+
+Implement the design system from MASTER.md. Every value in code must have a corresponding entry in MASTER.md or the fallback palette. No invented values.
+
+Create src/lib/animations.ts with shared Framer Motion variants:
+  fadeIn, fadeInUp, fadeInDown, scaleIn
+  textReveal (character stagger), wordReveal (word stagger)
+  staggerContainer (staggerChildren: 0.08)
+  cardHover (scale 1.02, shadow increase)
+  pageEnter, pageExit
+
+Create src/components/providers/MotionProvider.tsx
+  Reads prefers-reduced-motion via useReducedMotion hook.
+  Passes a context value. All animation components check this before animating.
+  When reduced motion is true: all variants have duration 0 and no transform changes.
+
+Create src/components/animations/ components:
+  ScrollReveal — wraps any child, triggers fadeInUp when 20% in view. Threshold configurable.
+  TextReveal — splits text into words or chars, staggers entry. Mode configurable.
+  StaggerContainer — wraps lists, provides staggerChildren context to direct children.
+  PageTransition — wraps page content, AnimatePresence with opacity + y offset.
+
+════════════════════════════════════════════
+PHASE 4 — GLOBAL CHROME
+════════════════════════════════════════════
+
+Build in this order. After each: check all breakpoints, check keyboard nav, check reduced motion.
+
+LOADING SCREEN
+  Animated logo/name reveal on first visit (sessionStorage flag — don't repeat on back navigation).
+  Letter-by-letter or word reveal. Exit: curtain wipe upward. Duration: max 2s.
+  Skeleton visible beneath so content is ready when curtain lifts.
+
+NAVBAR
+  Fixed top. Transparent → frosted glass on scroll (threshold: 80px scroll).
+  Logo left. Links center (desktop). CTA button right.
+  Active link: animated underline using Framer Motion layoutId.
+  Mobile (< 768px): hamburger icon → full-screen overlay menu.
+  Overlay: links stagger in from left. Close on link click or Escape key.
+  Entry animation: links fade in with 0.06s stagger on page load.
+
+CUSTOM CURSOR (desktop only, pointer device media query)
+  16px circle follows mouse with 80ms lerp lag.
+  On hover over [data-magnetic]: expands to 48px, text label appears.
+  On hover over links/buttons: changes to pointer blend-mode.
+  On click: brief scale-down pulse.
+  Hides when mouse leaves viewport.
+  Never renders on touch devices (pointer: coarse).
+
+SCROLL PROGRESS
+  2px line at top of viewport. Width = scroll percentage. Uses accent color from MASTER.md.
+
+For each component, search for a comparable component at https://21st.dev before building from scratch. Fetch the page, scan the component list. If a suitable one exists, adapt its structure to our tokens. If not, build your own.
+
+════════════════════════════════════════════
+PHASE 5 — SECTIONS
+════════════════════════════════════════════
+
+Build one section at a time. Complete order: Hero → About → Skills → Experience → Projects → Research → Achievements → GitHub → Contact → Footer.
+
+After each section:
+  1. Run a self-audit against this checklist:
+     □ No hardcoded personal data (all from placeholder.ts)
+     □ All tokens from MASTER.md (no invented hex values)
+     □ Fully responsive at 1440 / 1024 / 768 / 375
+     □ Keyboard navigable — Tab, Enter, Space, Escape all work
+     □ Reduced motion: static fallback with no transforms
+     □ Every interactive element: hover state + focus-visible state
+     □ ARIA labels on icon-only buttons
+     □ Color contrast ≥ 4.5:1 for body text
+  2. Fix any failures before moving to the next section.
+
+─────────────────────────────────────────
+HERO
+─────────────────────────────────────────
+Full viewport. Designed for impact, not information density.
+
+Layout: centered or asymmetric split — choose based on MASTER.md style.
+Typography: large display headline (clamp: 48px → 96px). Animate character-by-character with blur + y offset stagger.
+Subheading: single line, fades in after headline completes.
+CTA: two buttons — primary ("View work") + ghost ("Contact"). Magnetic hover effect. Fade in after subheading.
+3D scene: loaded dynamically (next/dynamic, ssr: false). See 3D section below.
+Scroll indicator: animated bounce arrow. Hides after 20% scroll.
+Background: use MASTER.md style direction (glassmorphism / dark minimal / aurora — whatever was recommended).
+
+─────────────────────────────────────────
+ABOUT
+─────────────────────────────────────────
+Desktop: 5-column grid — image takes 2 cols, text takes 3 cols.
+Tablet: image 50%, text 50%.
+Mobile: stacked, image first.
+
+Image: circular or square with rounded corners per MASTER.md. Clip-path reveal on scroll entry.
+Bio: paragraph text. Reveal line by line on scroll.
+Stats row: 3–4 numbers (years experience, projects shipped, etc.) with count-up animation on scroll entry.
+Availability badge: pulsing green dot + "Available for work" or "Open to opportunities."
+Resume button: download link, ghost style.
+
+─────────────────────────────────────────
+SKILLS
+─────────────────────────────────────────
+No progress bars. No percentages. They are subjective and look dated.
+
+Instead: grouped badge clusters by category. Each badge has an icon (Lucide or SVG) + name.
+Layout: masonry-style or bento grid — not a simple flat list.
+Badges stagger in on scroll entry (0.04s per badge, group by group).
+Hover: slight scale + border glow using accent color.
+Category labels: small caps, muted color, appear before their group.
+
+─────────────────────────────────────────
+EXPERIENCE
+─────────────────────────────────────────
+Vertical timeline. Connector line draws downward on scroll (SVG path dashoffset animation).
+Each entry: role (large), company (accent color link), dates (muted), 2–3 bullet descriptions, tech stack badges.
+Desktop: timeline center, entries alternate left/right.
+Tablet/mobile: timeline left, entries all right.
+Entry cards: appear with a 0.15s delay stagger as the line reaches them.
+
+─────────────────────────────────────────
+PROJECTS
+─────────────────────────────────────────
+Featured project: large hero card (full width). Image/video on hover reveal (clip-path left-to-right). Title, description, stack, two CTAs.
+Grid: 2-col below featured (desktop), 1-col (mobile).
+Filter bar: categories animate with Framer Motion layout transitions (items reorder, no jump cuts).
+Card hover: image scale 1.05 inside overflow hidden container. Bottom overlay slides up with CTAs.
+Stack badges on each card. GitHub + live icons.
+
+─────────────────────────────────────────
+RESEARCH
+─────────────────────────────────────────
+List layout (not cards) — editorial feel.
+Each entry: title (linked), venue + year (muted), abstract truncated to 3 lines.
+Expand abstract: animated height transition, no layout shift on other items.
+PDF and DOI links as icon buttons.
+If no research exists in placeholder data, show a graceful "Coming soon" state — not an empty section.
+
+─────────────────────────────────────────
+ACHIEVEMENTS
+─────────────────────────────────────────
+Icon + title + org + year layout. Bento or 3-col grid.
+Count-up numbers for any statistics (e.g., "3 hackathon wins").
+Stagger entry on scroll.
+If fewer than 3 achievements, merge with a "Recognition" section — never show a sparse grid.
+
+─────────────────────────────────────────
+GITHUB
+─────────────────────────────────────────
+Use placeholder.ts github data — do not make live API calls (no API key available).
+Visualize contribution data as a custom SVG grid (52 cols × 7 rows, colored by contribution level using accent palette from MASTER.md).
+Top repos: 3–4 cards with name, description, language dot, star count.
+Language breakdown: horizontal stacked bar, animated width on scroll entry.
+Link to GitHub profile.
+
+─────────────────────────────────────────
+CONTACT
+─────────────────────────────────────────
+Split: left col has copy + social links, right col has form.
+Form fields: name, email, subject, message. React Hook Form + Zod.
+Validation: inline error messages, animated shake on invalid submit.
+Success state: form fades out, success message with checkmark animation fades in.
+Social links: icon + label, each with a hover translate-x animation.
+No mailto links — use the form only. Include a fallback email address as plain text for accessibility.
+Form submission: log to console in placeholder state. Comment where to wire an API route.
+
+─────────────────────────────────────────
+FOOTER
+─────────────────────────────────────────
+Minimal. Single row on desktop: name left, nav links center, social icons right.
+Mobile: stacked, centered.
+Scroll-to-top button: appears after 500px scroll, fixed bottom-right, animated entry.
+Copyright and "built with" line in muted text.
+No decorative elements — the footer should feel like a period at the end of a sentence.
+
+════════════════════════════════════════════
+3D SCENE (React Three Fiber)
+════════════════════════════════════════════
+
+Load the entire Three.js scene with next/dynamic and ssr: false. It must never block the main thread.
+
+Scene composition:
+  3–5 floating geometric primitives: IcosahedronGeometry, TorusKnotGeometry, OctahedronGeometry.
+  Each rotates slowly on its own axis (different speeds, different axes).
+  Mouse parallax: on mousemove, all geometries shift position by ±5% of their base position. Lerp factor: 0.05 (smooth, not instant).
+  Material: MeshStandardMaterial with metalness 0.8, roughness 0.2, emissive color from MASTER.md accent.
+  Lighting: single AmbientLight (intensity 0.4) + single PointLight (intensity 1.2, position [10, 10, 10]).
+
+Particles:
+  BufferGeometry with 800–1200 points. Never per-instance geometry.
+  Slow drift upward, wrap at top edge.
+  Color: MASTER.md accent at 40% opacity.
+
+Performance rules (non-negotiable):
+  No postprocessing effects (Bloom, SSAO, etc.) unless devicePixelRatio === 1 and FPS > 58.
+  Set pixelRatio to Math.min(window.devicePixelRatio, 2).
+  Dispose all geometries and materials on component unmount.
+  Use useFrame delta for time-based animation — never Date.now().
+  Target 60fps on a mid-range laptop (test with DevTools CPU throttle 4x).
+
+Fallback: if WebGL context creation fails, render an animated CSS gradient background using the MASTER.md palette. No error visible to user.
+Reduced motion: render scene static (no animation loop) — just the geometries in their start positions.
+
+════════════════════════════════════════════
+SEO
+════════════════════════════════════════════
+
+src/app/layout.tsx — export a Metadata object:
+  title: { template: '%s | [Name]', default: '[Name] — [Title]' }
+  description, keywords, authors
+  openGraph: title, description, url, siteName, images (1200×630), type: 'website'
+  twitter: card 'summary_large_image', title, description, images
+  robots: index, follow, googleBot settings
+
+src/app/robots.ts — export a Robots config (Next.js 13+ convention)
+src/app/sitemap.ts — export a MetadataRoute.Sitemap
+src/app/layout.tsx — add JSON-LD Person schema via <script type="application/ld+json">
+
+All values source from src/data/placeholder.ts. No hardcoded strings in metadata.
+
+════════════════════════════════════════════
+PERFORMANCE GATES
+════════════════════════════════════════════
+
+These are hard requirements, not aspirational targets.
+
+Bundle: <150kb JS on first load (measured with ANALYZE=true). 
+Images: all via next/image with width, height, and blurDataURL.
+Fonts: loaded via next/font only. Zero FOUT.
+Three.js: dynamic import only — never in the initial bundle.
+LCP target: <2.5s on simulated 4G (Lighthouse).
+CLS: 0 — all images and embeds have explicit dimensions.
+Avoid: useEffect chains that cause multiple re-renders, anonymous functions in JSX props on hot paths, importing all of lodash/three instead of specific modules.
+
+════════════════════════════════════════════
+RESPONSIVENESS
+════════════════════════════════════════════
+
+Desktop-first. At each breakpoint, redesign — do not shrink.
+
+1440px: full layouts, large typography, side-by-side columns, visible cursor effects.
+1024px: reduce typography scale by ~15%, compress column layouts, hide cursor effects.
+768px: single column for most sections, hamburger nav, touch-optimized tap targets (44×44px min).
+375px: fluid type with clamp(), full-width cards, no horizontal scroll at any point.
+
+Test every section at every breakpoint before marking it complete.
+
+════════════════════════════════════════════
+ACCESSIBILITY STANDARDS
+════════════════════════════════════════════
+
+Structure:
+  <header>, <nav>, <main>, <section aria-labelledby>, <article>, <footer> — all present and correct.
+  First focusable element on page: "Skip to main content" link targeting #main-content.
+  Heading hierarchy: one <h1> per page, then h2 → h3 in strict order.
+
+Interaction:
+  All interactive elements reachable by Tab.
+  Enter and Space activate buttons and links.
+  Escape closes modals, menus, and overlays.
+  Focus-visible style on every focusable element — never suppress :focus without providing :focus-visible.
+
+Motion:
+  @media (prefers-reduced-motion: reduce) in globals.css sets all CSS transitions to 0.01ms.
+  All Framer Motion components check useReducedMotion() — when true, skip transforms and use opacity only.
+
+Content:
+  All images: alt attribute from placeholder.ts (never empty unless decorative, in which case alt="").
+  Icon-only buttons: aria-label describing the action.
+  Form inputs: <label> elements, not placeholder-as-label.
+  Color is never the sole means of conveying information.
+  Contrast: ≥4.5:1 body text, ≥3:1 large text and UI components.
+
+════════════════════════════════════════════
+FINAL SELF-AUDIT (run before considering the project done)
+════════════════════════════════════════════
+
+Run through every item. Fix before declaring done.
+
+Design quality:
+  □ No default Tailwind gray (#6B7280) used without MASTER.md justification
+  □ No stock card layout (white card, gray border, bottom link row)
+  □ No font-size: 14px body copy — minimum 16px
+  □ No section that could be mistaken for a Bootstrap or Tailwind template
+
+Code quality:
+  □ No console.log left in production paths
+  □ No TypeScript any types
+  □ No component over 200 lines — split if over
+  □ All images use next/image
+
+Data:
+  □ grep -r "placeholder" src/components — returns zero personal data
+  □ All content sourced exclusively from src/data/placeholder.ts
+
+Functionality:
+  □ All internal links work
+  □ Contact form validates and shows success state
+  □ All external links open in new tab with rel="noopener noreferrer"
+  □ 404 page exists and is styled
+
+Accessibility:
+  □ Tab through the entire page — every element reachable and operable
+  □ Lighthouse accessibility score ≥ 95
+  □ No missing alt attributes
+
+Performance:
+  □ Lighthouse performance score ≥ 90 (target 95)
+  □ No render-blocking resources
+  □ Three.js not in initial bundle (verify with bundle analyzer)
+
+Responsiveness:
+  □ No horizontal scroll at 375px
+  □ No overlapping elements at 768px
+  □ Touch targets ≥ 44×44px on mobile
+
+When all boxes are checked, the project is done.
+
+════════════════════════════════════════════
+VISUAL DIRECTION — GRAPHITE MONO + RED
+════════════════════════════════════════════
+
+This is the most important design constraint in the project.
+Every visual decision must pass through this filter.
+
+─────────────────────────────────────────
+WHAT THIS THEME IS
+─────────────────────────────────────────
+
+Graphite Mono + Red = precision engineering meets controlled intensity.
+
+Graphite: cool steel, machined aluminum, carbon fiber.
+Not warm gray. Not neutral gray. Metallic gray with subtle cool blue
+undertones (hue ~260) that read as precision-engineered, not muted.
+
+Mono: pure black and white editorial contrast pushed to its limit.
+Every element is graphic. Typography becomes design. Nothing hides.
+
+Red: the single chromatic signal in an achromatic system.
+Not a decoration — a scalpel. Used only where it must demand attention:
+primary CTA buttons, active states, hover reveals, the cursor ring.
+The contrast between near-black surfaces and pure red is the visual
+identity of this portfolio. Think: dark terminal with a red cursor.
+It should feel like a warning light on precision equipment — purposeful,
+not alarming.
+
+Together: a dark engineering portfolio with one precise strike of red.
+The kind of site that makes a recruiter pause and look twice.
+
+─────────────────────────────────────────
+INSTALL THE THEME
+─────────────────────────────────────────
+
+Run this immediately after shadcn is initialized:
+
+  npx shadcn@latest add https://www.shadcn.io/r/graphite.json
+
+Then replace globals.css with the full token set below.
+Red tokens are added on top of the graphite system — they do not
+replace it. Every surface stays graphite. Red appears only at
+interaction points.
+
+─────────────────────────────────────────
+EXACT CSS VARIABLES
+─────────────────────────────────────────
+
+@layer base {
+  :root {
+    /* Graphite Mono — light mode (functional fallback only) */
+    --background:            oklch(0.98 0.005 260);
+    --foreground:            oklch(0.08 0.010 260);
+    --card:                  oklch(0.95 0.005 260);
+    --card-foreground:       oklch(0.08 0.010 260);
+    --popover:               oklch(0.98 0.005 260);
+    --popover-foreground:    oklch(0.08 0.010 260);
+    --primary:               oklch(0.52 0.22 27);
+    --primary-foreground:    oklch(0.98 0.005 260);
+    --secondary:             oklch(0.92 0.008 260);
+    --secondary-foreground:  oklch(0.20 0.010 260);
+    --muted:                 oklch(0.92 0.008 260);
+    --muted-foreground:      oklch(0.50 0.010 260);
+    --accent:                oklch(0.52 0.22 27);
+    --accent-foreground:     oklch(0.98 0.005 260);
+    --destructive:           oklch(0.45 0.22 27);
+    --destructive-foreground:oklch(0.98 0.005 260);
+    --border:                oklch(0.85 0.008 260);
+    --input:                 oklch(0.85 0.008 260);
+    --ring:                  oklch(0.52 0.22 27);
+    --radius:                0.25rem;
+
+    /* Graphite scale */
+    --graphite-50:           oklch(0.97 0.005 260);
+    --graphite-100:          oklch(0.93 0.007 260);
+    --graphite-200:          oklch(0.86 0.009 260);
+    --graphite-300:          oklch(0.76 0.010 260);
+    --graphite-400:          oklch(0.65 0.010 260);
+    --graphite-500:          oklch(0.55 0.010 260);
+    --graphite-600:          oklch(0.44 0.010 260);
+    --graphite-700:          oklch(0.34 0.010 260);
+    --graphite-800:          oklch(0.22 0.010 260);
+    --graphite-900:          oklch(0.12 0.010 260);
+    --graphite-950:          oklch(0.07 0.008 260);
+
+    /* Red scale — the only chromatic scale in this system */
+    --red-300:               oklch(0.72 0.18 27);
+    --red-400:               oklch(0.62 0.21 27);
+    --red-500:               oklch(0.52 0.22 27);
+    --red-600:               oklch(0.44 0.21 27);
+    --red-700:               oklch(0.36 0.19 27);
+  }
+
+  .dark {
+    /* Primary dark mode — the designed experience */
+    --background:            oklch(0.09 0.008 260);
+    --foreground:            oklch(0.96 0.005 260);
+    --card:                  oklch(0.12 0.009 260);
+    --card-foreground:       oklch(0.96 0.005 260);
+    --popover:               oklch(0.11 0.009 260);
+    --popover-foreground:    oklch(0.96 0.005 260);
+    --primary:               oklch(0.58 0.22 27);
+    --primary-foreground:    oklch(0.98 0.005 260);
+    --secondary:             oklch(0.16 0.009 260);
+    --secondary-foreground:  oklch(0.80 0.008 260);
+    --muted:                 oklch(0.16 0.009 260);
+    --muted-foreground:      oklch(0.55 0.010 260);
+    --accent:                oklch(0.58 0.22 27);
+    --accent-foreground:     oklch(0.98 0.005 260);
+    --destructive:           oklch(0.65 0.22 27);
+    --destructive-foreground:oklch(0.98 0.005 260);
+    --border:                oklch(0.20 0.010 260);
+    --input:                 oklch(0.18 0.010 260);
+    --ring:                  oklch(0.58 0.22 27);
+  }
+}
+
+Default to dark mode. In layout.tsx set:
+  <html lang="en" className="dark" suppressHydrationWarning>
+
+Dark is the designed experience. Light is a functional fallback.
+
+─────────────────────────────────────────
+RED — WHERE IT LIVES AND WHERE IT DOESN'T
+─────────────────────────────────────────
+
+Red is the only chromatic color in this system.
+It must be used with discipline or the entire aesthetic collapses.
+
+PERMITTED uses of red (exactly these, nothing more):
+
+  1. PRIMARY CTA BUTTONS
+     Background: var(--red-500) dark / var(--red-500) light
+     Text: oklch(0.98 0.005 260) — near white
+     Hover: background shifts to var(--red-400), 200ms ease
+     Active: background shifts to var(--red-600), 100ms ease
+     Border: none — the fill is the statement
+     Glow on hover: box-shadow: 0 0 30px -8px oklch(0.58 0.22 27 / 0.5)
+     Font: font-mono, letter-spacing 0.05em, text-transform uppercase
+     Example: "VIEW WORK", "CONTACT ME", "DOWNLOAD CV"
+
+  2. GHOST BUTTONS (secondary CTAs)
+     Background: transparent
+     Border: 1px solid var(--red-500)
+     Text: var(--red-400)
+     Hover: background fills to oklch(0.58 0.22 27 / 0.08)
+     The red border on near-black background is the signature look.
+
+  3. ACTIVE NAVIGATION INDICATOR
+     The underline or left-border on the currently active nav link.
+     Not the text — just the indicator line.
+     Color: var(--red-500)
+
+  4. CUSTOM CURSOR RING
+     The outer ring of the custom cursor: stroke var(--red-500)
+     On hover over interactive elements: ring expands, fills to
+     oklch(0.58 0.22 27 / 0.15)
+
+  5. SCROLL PROGRESS BAR
+     The thin top progress line: var(--red-500)
+
+  6. HOVER REVEAL ON PROJECT CARDS
+     When hovering a project card, a thin 1px red left-border appears
+     (border-left: 2px solid var(--red-500)) and the card title shifts
+     to var(--red-400). The rest of the card stays graphite.
+     This is the only place card text changes color.
+
+  7. SECTION NUMBER ACCENT (current section only)
+     The zero-padded section number (01, 02...) of the section
+     currently in the viewport becomes var(--red-500).
+     All other section numbers stay var(--muted-foreground).
+
+  8. LOADING SCREEN CURSOR / BLINK
+     The blinking cursor element on the loading screen text reveal.
+     Color: var(--red-500). This is the first red the user sees.
+
+NOT PERMITTED — red must never appear on:
+  □ Backgrounds (no red surfaces, ever)
+  □ Cards or panels
+  □ Body copy or paragraph text
+  □ Section headings
+  □ Skill badges or tech stack tags
+  □ Borders on cards (only on the active hover state above)
+  □ Icons in their resting state
+  □ Any decorative element that is not interactive
+
+The rule: red only appears where a user is about to interact,
+is currently interacting, or should be directed to interact.
+If it doesn't guide action, it doesn't get red.
+
+─────────────────────────────────────────
+BUTTON SYSTEM
+─────────────────────────────────────────
+
+Three button variants. Only these three. No others.
+
+PRIMARY — full red fill
+  Use for: the single most important CTA per section (e.g. "View Work" in Hero)
+  Background: var(--red-500)
+  Text: oklch(0.98 0.005 260), font-mono, uppercase, tracking-widest
+  Border: none
+  Border-radius: 0.25rem (sharp — matches theme)
+  Padding: 12px 28px
+  Hover: --red-400 background + glow
+  Active: --red-600 background
+  Framer Motion: whileHover scale 1.02, whileTap scale 0.98
+  One per section maximum. Never two red-filled buttons side by side.
+
+GHOST — red border, transparent fill
+  Use for: secondary CTAs ("Download CV", "See All Projects")
+  Background: transparent
+  Border: 1px solid var(--red-500)
+  Text: var(--red-400), font-mono, uppercase, tracking-widest
+  Hover: subtle red fill oklch(0.58 0.22 27 / 0.08) + border brightens to --red-400
+  Framer Motion: whileHover scale 1.01, whileTap scale 0.98
+
+GHOST STEEL — graphite border, no red
+  Use for: low-priority actions ("View Source", "Read More")
+  Background: transparent
+  Border: 1px solid var(--border)
+  Text: var(--muted-foreground), font-mono, uppercase, tracking-widest
+  Hover: border becomes var(--graphite-400), text becomes var(--foreground)
+  No red. These actions don't compete for attention.
+
+Apply all three as CVA variants in src/components/atoms/Button.tsx.
+Never create a fourth button variant. If something doesn't fit these
+three, reconsider whether it needs a button at all.
+
+─────────────────────────────────────────
+TYPOGRAPHY — MONO LAYER
+─────────────────────────────────────────
+
+Two fonts only.
+
+Display + Headings: "Geist Mono" or "JetBrains Mono"
+  — monospaced, engineered, makes headings feel like terminal output
+  — weight 500 (medium), letter-spacing -0.02em on large sizes
+  — use for: h1, h2, navbar logo, section numbers, stat counters
+
+Body + UI: "Geist" or "Inter"
+  — clean sans, high legibility, pairs with mono headings
+  — weight 400 regular, 500 for labels
+
+Load via next/font/google:
+  import { Geist, Geist_Mono } from 'next/font/google'
+  const geistSans = Geist({ subsets: ['latin'], variable: '--font-sans' })
+  const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' })
+
+Apply on <html>: className={`${geistSans.variable} ${geistMono.variable}`}
+
+tailwind.config.ts:
+  fontFamily: {
+    sans: ['var(--font-sans)'],
+    mono: ['var(--font-mono)'],
+  }
+
+Typography rules:
+  • Section headings: font-mono
+  • Body copy: font-sans
+  • Buttons: font-mono, uppercase, tracking-widest
+  • Code, badges, stat numbers: font-mono
+  • Letter spacing on display: -0.03em
+  • Line height on headings: 1.1
+  • No italic text — italic reads warm, this theme is cold
+
+─────────────────────────────────────────
+LAYOUT RULES
+─────────────────────────────────────────
+
+Grid-based. Everything snaps to a visible structure.
+
+12-column grid across all sections.
+Section containers: max-w-7xl, centered, px-6 (desktop) px-4 (mobile).
+Sections separated by 1px horizontal rules (var(--border)), not margin alone.
+
+Section numbering — prefix every section heading:
+  <span class="font-mono text-sm text-muted-foreground">01</span>
+  <h2 class="font-mono">About</h2>
+
+The section number of the currently visible section turns red
+(var(--red-500)) via an IntersectionObserver. All others stay muted.
+This is a subtle but powerful signal that ties the red system together.
+
+Whitespace: generous. Minimum 120px vertical padding per section.
+
+─────────────────────────────────────────
+SURFACE TREATMENT
+─────────────────────────────────────────
+
+Backgrounds: only --background, --card, --muted. No gradients on surfaces.
+Borders: 1px solid var(--border). Cards use border, not shadow.
+Border radius: 0.25rem — sharp corners everywhere except badges (pill).
+
+Card hover state:
+  border-left: 2px solid var(--red-500) — slides in from width 0 over 200ms
+  background: transitions to oklch(0.14 0.009 260) over 200ms
+  title text: transitions to var(--red-400) over 200ms
+  No scale. No shadow. Just the red left-border and the subtle bg shift.
+
+─────────────────────────────────────────
+GLOW EFFECTS
+─────────────────────────────────────────
+
+Two glow types. Only these two.
+
+GRAPHITE GLOW — ambient, passive:
+  box-shadow: 0 0 40px -10px oklch(0.55 0.01 260 / 0.4)
+  Apply to: hero 3D scene canvas only
+
+RED GLOW — active, interactive:
+  box-shadow: 0 0 30px -8px oklch(0.58 0.22 27 / 0.5)
+  Apply to: primary CTA button on hover only
+
+Nowhere else. Every additional glow dilutes both.
+
+─────────────────────────────────────────
+COMPONENT SOURCING FROM 21ST.DEV
+─────────────────────────────────────────
+
+Before building any UI component from scratch, fetch and scan:
+  https://21st.dev/
+
+When adapting a component to this theme:
+  1. Fetch its source from the 21st.dev registry
+  2. Strip all color — replace with graphite tokens
+  3. Re-add red only on interactive elements (buttons, hover states)
+  4. Adapt border-radius to 0.25rem
+  5. Replace warm shadows with border treatments
+  6. Add Framer Motion where original uses CSS transitions only
+
+Priority components to source from 21st.dev:
+  • Navbar              → search "navbar"
+  • Hero text animation → search "text reveal" or "typewriter"
+  • Timeline            → search "timeline"
+  • Project cards       → search "card hover" or "project grid"
+  • Skill badges        → search "badge" or "tag"
+  • Magnetic button     → search "magnetic button"
+  • Custom cursor       → search "custom cursor"
+  • Loading screen      → search "loader" or "page loader"
+
+Always fetch the component URL and read the code. Never guess.
+
+─────────────────────────────────────────
+REFERENCE AESTHETIC SOURCES
+─────────────────────────────────────────
+
+Before writing Hero and About, fetch and study these URLs.
+Extract layout patterns, type treatment, spacing ratios. Do not copy code.
+
+  https://21st.dev/community/themes/graphite-mono
+  https://www.shadcn.io/theme/graphite
+  https://www.shadcn.io/theme/mono
+
+Also scan https://21st.dev/ for:
+  dark portfolio sections, monochrome hero layouts,
+  engineering navbars, terminal-style text reveals,
+  red-accent developer tools.
+
+─────────────────────────────────────────
+THINGS THAT BREAK THIS THEME (never do these)
+─────────────────────────────────────────
+
+□ Warm grays (oklch hue > 50) — reads as generic dark theme immediately
+□ Any color other than red and graphite — no blue, purple, teal, green, orange
+□ Red on surfaces, backgrounds, or headings — red is for interactions only
+□ Two red primary buttons visible at the same time
+□ Gradient backgrounds on sections
+□ Card corners > 0.25rem
+□ Box shadows instead of borders (except the two approved glows)
+□ Personality fonts — mono + sans only
+□ Colored skill badges — graphite border + muted text only
+□ Emoji anywhere
+□ Centered body text
+□ Hover scale on cards — use red left-border transition instead
+□ Red used more than 3 times in a single viewport
+
+─────────────────────────────────────────
+SELF-CHECK BEFORE ANY SECTION IS DONE
+─────────────────────────────────────────
+
+□ Desaturate to 0% — does it still look intentional? (It must)
+□ Add saturation back — is red the only color that appears?
+□ Are all card corners sharp (≤ 0.25rem)?
+□ Are section headings in font-mono?
+□ Are buttons uppercase font-mono?
+□ Is the primary button red-filled?
+□ Is red appearing only on interactive elements?
+□ Are there any warm gray tones or any non-red colors?
+□ Does the current section's number show in red?
+□ Does it look engineered, not designed?
+□ Would this fit in a premium developer tool?
+
+If any answer is no — fix it before moving forward.

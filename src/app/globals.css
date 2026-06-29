@@ -1,26 +1,238 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Enable class-based dark mode (html.dark is always on — dark is the design). */
+@custom-variant dark (&:is(.dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* ============================================================================
+   GRAPHITE MONO + RED — token source of truth (design-system/portfolio/MASTER.md)
+   ========================================================================== */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Graphite Mono — light mode (functional fallback only) */
+    --background: oklch(0.98 0.005 260);
+    --foreground: oklch(0.08 0.01 260);
+    --card: oklch(0.95 0.005 260);
+    --card-foreground: oklch(0.08 0.01 260);
+    --card-hover: oklch(0.93 0.006 260);
+    --popover: oklch(0.98 0.005 260);
+    --popover-foreground: oklch(0.08 0.01 260);
+    --primary: oklch(0.52 0.22 27);
+    --primary-foreground: oklch(0.98 0.005 260);
+    --secondary: oklch(0.92 0.008 260);
+    --secondary-foreground: oklch(0.2 0.01 260);
+    --muted: oklch(0.92 0.008 260);
+    --muted-foreground: oklch(0.5 0.01 260);
+    --accent: oklch(0.52 0.22 27);
+    --accent-foreground: oklch(0.98 0.005 260);
+    --destructive: oklch(0.45 0.22 27);
+    --destructive-foreground: oklch(0.98 0.005 260);
+    --border: oklch(0.85 0.008 260);
+    --input: oklch(0.85 0.008 260);
+    --ring: oklch(0.52 0.22 27);
+    --radius: 0.25rem;
+
+    /* Graphite scale — hue locked to 260 (cool, never warm) */
+    --graphite-50: oklch(0.97 0.005 260);
+    --graphite-100: oklch(0.93 0.007 260);
+    --graphite-200: oklch(0.86 0.009 260);
+    --graphite-300: oklch(0.76 0.01 260);
+    --graphite-400: oklch(0.65 0.01 260);
+    --graphite-500: oklch(0.55 0.01 260);
+    --graphite-600: oklch(0.44 0.01 260);
+    --graphite-700: oklch(0.34 0.01 260);
+    --graphite-800: oklch(0.22 0.01 260);
+    --graphite-900: oklch(0.12 0.01 260);
+    --graphite-950: oklch(0.07 0.008 260);
+
+    /* Red scale — the only chromatic scale in this system */
+    --red-300: oklch(0.72 0.18 27);
+    --red-400: oklch(0.62 0.21 27);
+    --red-500: oklch(0.52 0.22 27);
+    --red-600: oklch(0.44 0.21 27);
+    --red-700: oklch(0.36 0.19 27);
+
+    /* Animation tokens */
+    --duration-instant: 100ms;
+    --duration-fast: 200ms;
+    --duration-base: 350ms;
+    --duration-slow: 600ms;
+    --duration-page: 900ms;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  }
+
+  .dark {
+    /* Primary dark mode — the designed experience */
+    --background: oklch(0.09 0.008 260);
+    --foreground: oklch(0.96 0.005 260);
+    --card: oklch(0.12 0.009 260);
+    --card-foreground: oklch(0.96 0.005 260);
+    --card-hover: oklch(0.14 0.009 260);
+    --popover: oklch(0.11 0.009 260);
+    --popover-foreground: oklch(0.96 0.005 260);
+    --primary: oklch(0.58 0.22 27);
+    --primary-foreground: oklch(0.98 0.005 260);
+    --secondary: oklch(0.16 0.009 260);
+    --secondary-foreground: oklch(0.8 0.008 260);
+    --muted: oklch(0.16 0.009 260);
+    --muted-foreground: oklch(0.55 0.01 260);
+    --accent: oklch(0.58 0.22 27);
+    --accent-foreground: oklch(0.98 0.005 260);
+    --destructive: oklch(0.65 0.22 27);
+    --destructive-foreground: oklch(0.98 0.005 260);
+    --border: oklch(0.2 0.01 260);
+    --input: oklch(0.18 0.01 260);
+    --ring: oklch(0.58 0.22 27);
+
+    /* Red brightens slightly in dark mode for the strike */
+    --red-500: oklch(0.58 0.22 27);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================================
+   Tailwind v4 theme mapping — turns the vars above into utilities
+   ========================================================================== */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-hover: var(--card-hover);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-graphite-50: var(--graphite-50);
+  --color-graphite-100: var(--graphite-100);
+  --color-graphite-200: var(--graphite-200);
+  --color-graphite-300: var(--graphite-300);
+  --color-graphite-400: var(--graphite-400);
+  --color-graphite-500: var(--graphite-500);
+  --color-graphite-600: var(--graphite-600);
+  --color-graphite-700: var(--graphite-700);
+  --color-graphite-800: var(--graphite-800);
+  --color-graphite-900: var(--graphite-900);
+  --color-graphite-950: var(--graphite-950);
+
+  --color-red-300: var(--red-300);
+  --color-red-400: var(--red-400);
+  --color-red-500: var(--red-500);
+  --color-red-600: var(--red-600);
+  --color-red-700: var(--red-700);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1;
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-in-out-expo: var(--ease-in-out-expo);
+}
+
+/* ============================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--red-500);
+    color: var(--primary-foreground);
+  }
+
+  /* Focus — red ring, never suppressed without a replacement */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  /* Graphite scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--graphite-800);
+    border: 2px solid var(--background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--graphite-700);
+  }
+}
+
+/* ============================================================================
+   Utilities — declared with @utility so they compose with hover:/focus: etc.
+   The two approved glows — nothing else.
+   ========================================================================== */
+@utility glow-graphite {
+  box-shadow: 0 0 40px -10px oklch(0.55 0.01 260 / 0.4);
+}
+@utility glow-red {
+  box-shadow: 0 0 30px -8px oklch(0.58 0.22 27 / 0.5);
+}
+
+/* Faint engineering grid backdrop (graphite only, no color) */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* ============================================================================
+   Reduced motion — opacity-only, no transforms (instruction + MASTER)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-reduce-motion="true"] *,
+[data-reduce-motion="true"] *::before,
+[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }

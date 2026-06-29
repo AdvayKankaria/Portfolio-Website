@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <defs>
+    <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#222732" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="600" fill="#161a22"/>
+  <rect width="600" height="600" fill="url(#g)" opacity="0.5"/>
+  <text x="300" y="330" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="180" font-weight="600" fill="#3a414f">AR</text>
+  <rect x="40" y="40" width="6" height="36" fill="#e5484d"/>
+</svg>

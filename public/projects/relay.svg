@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <pattern id="g" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#222732" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="#12151c"/>
+  <rect width="1200" height="675" fill="url(#g)" opacity="0.6"/>
+  <rect x="40" y="40" width="8" height="40" fill="#e5484d"/>
+  <text x="48" y="360" font-family="ui-monospace,Menlo,monospace" font-size="64" font-weight="600" fill="#f4f6f8" letter-spacing="-1">Relay</text>
+  <text x="50" y="120" font-family="ui-monospace,Menlo,monospace" font-size="22" fill="#7c8696" letter-spacing="4">PREVIEW</text>
+  <text x="48" y="420" font-family="ui-monospace,Menlo,monospace" font-size="24" fill="#7c8696">placeholder — replace with a real screenshot or recording</text>
+</svg>
