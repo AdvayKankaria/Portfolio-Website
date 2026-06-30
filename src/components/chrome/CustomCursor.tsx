@@ -29,18 +29,26 @@ export function CustomCursor() {
     const target = { ...pos };
     let raf = 0;
     // ~80ms lerp lag at 60fps. Reduced motion → snap (factor 1).
-    const factor = reduced ? 1 : 0.2;
+    const factor = reduced ? 1 : 0.4;
+
+    let lastTarget: EventTarget | null = null;
 
     const onMove = (e: MouseEvent) => {
       target.x = e.clientX;
       target.y = e.clientY;
-      setHidden(false);
+      
+      if (hidden) setHidden(false);
+
+      // Performance optimization: only check DOM if the hovered element changes
+      if (e.target === lastTarget) return;
+      lastTarget = e.target;
 
       const el = e.target as HTMLElement | null;
       const magnetic = el?.closest("[data-magnetic]");
       const interactive = el?.closest(
         'a, button, [role="button"], input, textarea, select, label',
       );
+      
       if (magnetic) {
         setVariant("magnetic");
         setLabel(magnetic.getAttribute("data-cursor-label") ?? "View");
