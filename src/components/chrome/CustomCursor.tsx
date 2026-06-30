@@ -66,7 +66,7 @@ export function CustomCursor() {
       raf = requestAnimationFrame(loop);
     };
 
-    document.documentElement.classList.add("cursor-none");
+    document.documentElement.classList.add("hide-native-cursor");
     window.addEventListener("mousemove", onMove);
     document.addEventListener("mouseleave", onLeave);
     window.addEventListener("mousedown", onDown);
@@ -74,7 +74,7 @@ export function CustomCursor() {
     raf = requestAnimationFrame(loop);
 
     return () => {
-      document.documentElement.classList.remove("cursor-none");
+      document.documentElement.classList.remove("hide-native-cursor");
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("mousedown", onDown);
@@ -86,25 +86,26 @@ export function CustomCursor() {
   if (!fine) return null;
 
   return (
-    <div
-      ref={ringRef}
-      aria-hidden
-      className={cn(
-        "pointer-events-none fixed left-0 top-0 z-50 grid place-items-center rounded-full border border-red-500 transition-[width,height,background-color,opacity] duration-200 ease-out",
-        hidden ? "opacity-0" : "opacity-100",
-        variant === "magnetic"
-          ? "h-12 w-12 bg-red-500/15"
-          : variant === "interactive"
-            ? "h-7 w-7 bg-red-500/10"
-            : "h-4 w-4 bg-transparent",
-        pressed && "scale-90",
-      )}
-    >
-      {variant === "magnetic" && label && (
-        <span className="font-mono text-2xs uppercase leading-none tracking-widest text-red-300">
-          {label}
-        </span>
-      )}
-    </div>
+    <>
+      <div
+        ref={ringRef}
+        aria-hidden
+        className={cn(
+          "pointer-events-none fixed left-0 top-0 z-50 grid place-items-center rounded-full border border-red-500 transition-[width,height,background-color,opacity] duration-200 ease-out",
+          hidden ? "opacity-0" : "opacity-100",
+          variant === "magnetic"
+            ? (pressed ? "h-10 w-10 bg-red-500/20" : "h-12 w-12 bg-red-500/15")
+            : variant === "interactive"
+              ? (pressed ? "h-5 w-5 bg-red-500/15" : "h-7 w-7 bg-red-500/10")
+              : (pressed ? "h-3 w-3 bg-red-500/5" : "h-4 w-4 bg-transparent")
+        )}
+      >
+        {variant === "magnetic" && label && (
+          <span className="font-mono text-2xs uppercase leading-none tracking-widest text-red-300">
+            {label}
+          </span>
+        )}
+      </div>
+    </>
   );
 }

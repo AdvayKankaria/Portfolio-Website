@@ -3,6 +3,11 @@
 /* Enable class-based dark mode (html.dark is always on — dark is the design). */
 @custom-variant dark (&:is(.dark *));
 
+/* Global rule to hide native cursor when CustomCursor is active */
+.hide-native-cursor, .hide-native-cursor * {
+  cursor: none !important;
+}
+
 /* ============================================================================
    GRAPHITE MONO + RED — token source of truth (design-system/portfolio/MASTER.md)
    ========================================================================== */
